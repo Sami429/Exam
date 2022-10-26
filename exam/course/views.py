@@ -115,8 +115,8 @@ class StudentCourseView(APIView):
         serializer = StudentCourseSerializer(test, many = True)
         return Response(serializer.data)
     # ! Add a new student to a course
-    def post(self, request):
-        serializer = StudentCourseSerializer(data = request.data, context = {'request': request})
+    def post(self, request, format=None):
+        serializer = StudentCourseSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

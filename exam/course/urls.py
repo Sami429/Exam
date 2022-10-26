@@ -17,16 +17,14 @@ urlpatterns = [
     path('question/update-question/<int:pk>', views.QuestionDetail.as_view()),
     path('question/delete-question/<int:pk>', views.QuestionDetail.as_view()),
     path('question/create-question/', views.QuestionDetail.as_view()),
-    
-    
+    # ! Student Course URLS 
     path('student-course/add-student-course/', views.StudentCourseView.as_view()),
     path('student-course/get-student-course/', views.StudentCourseView.as_view()),
     path('student-course/delete-student-course/<int:pk>', views.StudentCourseView.as_view()),
-    
+    # ! Student Test URLS 
     path('student-test/add-student-test/', views.TestAppearedView.as_view()),
     path('student-test/get-student-test/', views.TestAppearedView.as_view()),
-
+    # ! Student Answers URLS 
     path('student-answer/add-student-answer/', views.SelectedAnswersView.as_view()),
     path('student-answer/get-student-answer/<int:pk>', views.SelectedAnswersView.as_view()),
-
 ]
