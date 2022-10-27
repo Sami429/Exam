@@ -1,3 +1,4 @@
+from asyncore import dispatcher
 from functools import partial
 from tkinter.tix import Tree
 from django.shortcuts import render
@@ -32,11 +33,10 @@ class StudentRegistration(APIView):
         return Response(list(user))
 
 
-class UserLogin(APIView):
-    def get(self,request):
-        return render(request, 'login.html')
 
+class UserLogin(APIView):
     def post(self, request):
+        print(request.user)
         usr = request.data['username']
         passw = request.data['password']
         auth = authenticate(request, username = usr, password = passw)
@@ -47,11 +47,12 @@ class UserLogin(APIView):
         else:
             return HttpResponse({"status": status.HTTP_401_UNAUTHORIZED})
 
-
-def userLogout(request):
-    logout(request)
-    print(request.user)
-    return HttpResponse({"status": status.HTTP_200_OK})
+class UserLogout(APIView):
+    def post(self, request):
+        print(request.user)
+        logout(request)
+        print(request.user)
+        return HttpResponse({"status": status.HTTP_200_OK})
 
 class DeactivateUser(APIView):
     def post(self, request):
