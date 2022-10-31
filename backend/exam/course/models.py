@@ -1,10 +1,7 @@
-from enum import unique
-from statistics import mode
-from wsgiref.validate import validator
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.conf import settings
-from rest_framework.response import Response
+from django.contrib.auth.models import User
 
 def answer_validator(option):
     if option in ["a", "b", "c", "d"]:
@@ -15,7 +12,7 @@ def answer_validator(option):
 
 class Course(models.Model):
     course_name = models.CharField(max_length=256, null=False, blank=False, unique=True)
-    creater_name = models.CharField(max_length=256, null=False, blank=False)
+    creater_name = models.ForeignKey(User, null=False, blank=False, on_delete = models.CASCADE)
 
     def __str__(self):
         return self.course_name

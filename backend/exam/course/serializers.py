@@ -1,21 +1,29 @@
 from cgi import test
 from rest_framework import serializers
+
 from .models import Course, SelectedAnswers, StudentCourse, Test, Question, TestAppeared
 from django.contrib.auth.models import User
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User 
+        fields = '__all__'
 class CourseSerializer(serializers.Serializer):
-    course_name = serializers.CharField(max_length=256)
-    creater_name = serializers.CharField(max_length=256)
+    course_name = serializers.CharField()
+    creater_name = UserSerializer(read_only = True)
 
     def create(self, valid_data):
-        return Course.objects.create(**valid_data)
+        request = self.context["request"]
+        course_obj = Course(**valid_data)
+        course_obj.creater_name = User.objects.get(username = request.user)
+        # course_obj.creater_name = request.data['creater_name']
+        course_obj.course_name = request.data['course_name']
+        course_obj.save()
+        return course_obj
 
     def update(self, instance, validated_data):
         instance.course_name = validated_data.get(
             "course_name", instance.course_name
-        )
-        instance.creater_name = validated_data.get(
-            "creater_name", instance.creater_name
         )
         instance.save()
         return instance
@@ -28,13 +36,13 @@ class CourseSerializer(serializers.Serializer):
 class TestSerializer(serializers.Serializer):
     test_name = serializers.CharField(max_length=256)
     test_duration = serializers.DurationField()
-    fk_course = CourseSerializer(read_only=True)
+    fk_course = CourseSerializer(read_only = True)
 
     def create(self, valid_data):
         request = self.context["request"]
-        fk_course_id = request.data.get("fk_course_id")
+        # fk_course_id = request.data.get("fk_course_id")
         test_obj = Test(**valid_data)
-        test_obj.fk_course_id = fk_course_id
+        test_obj.fk_course_id = Course.objects.get(course_name = request.data.get("fk_course_id")).id
         test_obj.save()
         return test_obj
 
@@ -62,9 +70,9 @@ class QuestionSerializer(serializers.Serializer):
 
     def create(self, valid_data):
         request = self.context["request"]
-        fk_test_id = request.data.get("fk_test_id")
+        test = Test.objects.get(test_name = request.data.get("fk_test_id"))
         test_obj = Question(**valid_data)
-        test_obj.fk_test_id = fk_test_id
+        test_obj.fk_test_id = test.id
         test_obj.save()
         return test_obj
 
@@ -79,10 +87,7 @@ class QuestionSerializer(serializers.Serializer):
         return instance
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User 
-        fields = '__all__'
+
 
 class StudentCourseSerializer(serializers.ModelSerializer):
     course = CourseSerializer(read_only = True)
@@ -90,10 +95,10 @@ class StudentCourseSerializer(serializers.ModelSerializer):
 
     def create(self, valid_data):
         request = self.context['request']
-        student_id = request.data['student_id']
+        # student_id = request.data['student_id']
         course_id = request.data['course_id']
         obj = StudentCourse(**valid_data)
-        assigned_student = User.objects.get(username = student_id)
+        assigned_student = User.objects.get(username = request.user)
         obj.student = assigned_student
         assigned_course = Course.objects.get(course_name = course_id)
         obj.course = assigned_course

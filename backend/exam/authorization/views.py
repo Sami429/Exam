@@ -10,7 +10,9 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password 
-from django.contrib.auth.decorators import permission_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 from .serializers import UserSerializer
 class StudentRegistration(APIView):
     def post(self, request):
@@ -47,6 +49,7 @@ class UserLogin(APIView):
         else:
             return HttpResponse({"status": status.HTTP_401_UNAUTHORIZED})
 
+# method_decorator(login_required, name='post')
 class UserLogout(APIView):
     def post(self, request):
         print(request.user)

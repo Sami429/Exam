@@ -8,7 +8,10 @@ function NavigationBar(args) {
         <NavbarBrand href="/">Exam System</NavbarBrand>
         <Nav pills>
           <NavItem>
-            <NavLink href="/login">Login</NavLink>
+            <NavLink href="/login">Student Login</NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink href="/staff-login">Staff Login</NavLink>
           </NavItem>
           <NavItem>
             <NavLink href="/signup">Signup</NavLink>

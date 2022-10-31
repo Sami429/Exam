@@ -16,25 +16,25 @@ class CourseDetail(APIView):
     #  ! Get a particular course
     def get_object(self, pk):
         try:
-            return Course.objects.get(id=pk)  
+            return Course.objects.get(course_name=pk)  
         except Course.DoesNotExist:  
             raise Http404
     #  ! Update a course
-    def put(self, request, pk, format=None):
-        snippet = self.get_object(pk)
+    def put(self, request, format=None):
+        snippet = self.get_object(request.GET.get('course'))
         serializer = CourseSerializer(snippet, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # ! Delete a course
-    def delete(self, request, pk, format=None):
-        course = self.get_object(pk)
+    def delete(self, request, format=None):
+        course = self.get_object(request.GET.get('course'))
         course.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     # ! Add a course
     def post(self, request, format=None):
-        serializer = CourseSerializer(data=request.data)
+        serializer = CourseSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -50,20 +50,20 @@ class TestDetail(APIView):
     #  ! Get a particular test
     def get_object(self, pk):
         try:
-            return Test.objects.get(id=pk)  
+            return Test.objects.get(test_name=pk)  
         except Test.DoesNotExist:  
             raise Http404
     #  ! Update a test
-    def put(self, request, pk, format=None):
-        snippet = self.get_object(pk)
+    def put(self, request, format=None):
+        snippet = self.get_object(request.data['test_name'])
         serializer = TestSerializer(snippet, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # ! Delete a test
-    def delete(self, request, pk, format=None):
-        test = self.get_object(pk)
+    def delete(self, request, format=None):
+        test = self.get_object(request.GET.get('test'))
         test.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     # ! Add a test
@@ -84,20 +84,20 @@ class QuestionDetail(APIView):
     #  ! Get a particular question
     def get_object(self, pk):
         try:
-            return Question.objects.get(id=pk)  
+            return Question.objects.get(question=pk)  
         except Question.DoesNotExist:  
             raise Http404
     #  ! Update a question
-    def put(self, request, pk, format=None):
-        snippet = self.get_object(pk)
+    def put(self, request, format=None):
+        snippet = self.get_object(request.GET.get('question'))
         serializer = QuestionSerializer(snippet, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # ! Delete a question
-    def delete(self, request, pk, format=None):
-        test = self.get_object(pk)
+    def delete(self, request, format=None):
+        test = self.get_object(request.GET.get('question'))
         test.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     # ! Add a question
@@ -124,12 +124,13 @@ class StudentCourseView(APIView):
     # ! Get a particular row from the table
     def get_object(self, pk):
         try:
-            return StudentCourse.objects.get(id=pk)  
+            return StudentCourse.objects.get(course=pk)  
         except StudentCourse.DoesNotExist:  
             raise Http404
     # ! Remove student from a course 
-    def delete(self, request, pk, format=None):
-        test = self.get_object(pk)
+    def delete(self, request, format=None):
+        course = Course.objects.get(course_name = request.GET.get('course', None))
+        test = StudentCourse.objects.get(course_id = course.id) 
         test.delete()
         return Response(status=status.HTTP_204_NO_CONTENT) 
 

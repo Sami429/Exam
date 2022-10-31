@@ -11,9 +11,8 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css";
-function Login() {
+
+function StaffLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const updateName = (e) => {
@@ -33,25 +32,14 @@ function Login() {
         },
         {
           withCredentials: true,
-        }
+        },
       )
-      // .then(function (response) {
-      //   toast.success("Successful Login");
-      //   navigate("/profile");
-      //   // if (response.status === 200) {
-      //   //   toast('Success', {type: "success"})
-
-      //   // }
-      // })
-      .then(response => {
-        // toast.success("Successful Login");
-        if (response.status === 200) {
-          toast('Success', {type: "success"})
-          navigate("/profile");
-        }
+      .then(function (response) {
+        console.log(response);
+        navigate("/staff-profile");
       })
-      .catch(error => {
-        toast("Failure", { type: "error" });
+      .catch(function (error) {
+        console.log(error);
         navigate("/");
       });
   };
@@ -105,4 +93,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default StaffLogin;

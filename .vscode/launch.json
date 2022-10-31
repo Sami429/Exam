@@ -8,7 +8,7 @@
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/exam/manage.py",
+            "program": "${workspaceFolder}/backend/exam/manage.py",
             "args": [
                 "runserver"
             ],
