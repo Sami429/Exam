@@ -11,6 +11,8 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function StaffLogin() {
   const [username, setUsername] = useState("");
@@ -32,14 +34,16 @@ function StaffLogin() {
         },
         {
           withCredentials: true,
-        },
+        }
       )
-      .then(function (response) {
-        console.log(response);
-        navigate("/staff-profile");
+      .then((response) => {
+        if (response.status === 200) {
+          toast("Successfully Logged In!!", { type: "success" });
+          navigate("/staff-profile");
+        }
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        toast("Failure!!", { type: "error" });
         navigate("/");
       });
   };

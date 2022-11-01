@@ -35,23 +35,15 @@ function Login() {
           withCredentials: true,
         }
       )
-      // .then(function (response) {
-      //   toast.success("Successful Login");
-      //   navigate("/profile");
-      //   // if (response.status === 200) {
-      //   //   toast('Success', {type: "success"})
-
-      //   // }
-      // })
       .then(response => {
         // toast.success("Successful Login");
         if (response.status === 200) {
-          toast('Success', {type: "success"})
+          toast('Successfully Logged In!!', {type: "success"})
           navigate("/profile");
         }
       })
       .catch(error => {
-        toast("Failure", { type: "error" });
+        toast("Failure!!", { type: "error" });
         navigate("/");
       });
   };

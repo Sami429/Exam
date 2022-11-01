@@ -16,10 +16,13 @@ import {
   PopoverHeader,
   PopoverBody,
   Form,
+  InputGroup,
+  InputGroupText,
 } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 axios.defaults.withCredentials = true;
 
 function Profile() {
@@ -88,12 +91,15 @@ function Profile() {
       .post("http://127.0.0.1:8000/users/logout/", {
         withCredentials: true,
       })
-      .then(function (response) {
-        console.log(response);
-        navigate("/login");
+      .then((response) => {
+        // toast.success("Successful Login");
+        if (response.status === 200) {
+          toast("Successfully Logged Out", { type: "success" });
+          navigate("/login");
+        }
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch(error => {
+        toast("Failure!!", { type: "error" });
         navigate("/");
       });
   };
@@ -114,15 +120,25 @@ function Profile() {
     else setUpdateUserFname(null);
   };
   const updateUser = () => {
-    axios.put(
-      "http://127.0.0.1:8000/users/update-user-details/",
-      {
-        fname: updateUserFname,
-        lname: updateUserLname,
-        email: updateUserEmail,
-      },
-      { withCredentials: true }
-    );
+    axios
+      .put(
+        "http://127.0.0.1:8000/users/update-user-details/",
+        {
+          fname: updateUserFname,
+          lname: updateUserLname,
+          email: updateUserEmail,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        // toast.success("Successful Login");
+        if (response.status === 200) {
+          toast("User Updated Successfully!!", { type: "success" });
+        }
+      })
+      .catch((error) => {
+        toast("Failure!!", { type: "error" });
+      });
   };
 
   const [newPassword, setNewPassword] = useState("");
@@ -138,15 +154,25 @@ function Profile() {
   };
   const changePassword = () => {
     if (newPassword === resetPassword) {
-      axios.put(
-        "http://127.0.0.1:8000/users/reset-password/",
-        {
-          new_password: newPassword,
-        },
-        { withCredentials: true }
-      );
+      axios
+        .put(
+          "http://127.0.0.1:8000/users/reset-password/",
+          {
+            new_password: newPassword,
+          },
+          { withCredentials: true }
+        )
+        .then((response) => {
+          // toast.success("Successful Login");
+          if (response.status === 200) {
+            toast("Successfully Reset Password!!", { type: "success" });
+          }
+        })
+        .catch((error) => {
+          toast("Failure!!", { type: "error" });
+        });
     } else {
-      setPopoverStatus(!popoverStatus);
+      toast("Passwords are not equal!!", { type: "warning" });
     }
   };
 
@@ -193,15 +219,25 @@ function Profile() {
     setSelectedCourse(e.target.value);
   };
   const enrollStudent = () => {
-    axios.post(
-      "http://127.0.0.1:8000/courses/student-course/add-student-course/",
-      {
-        course_id: selectedCourse,
-      },
-      {
-        withCredentials: true,
-      }
-    );
+    axios
+      .post(
+        "http://127.0.0.1:8000/courses/student-course/add-student-course/",
+        {
+          course_id: selectedCourse,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        // toast.success("Successful Login");
+        if (response.status === 200) {
+          toast("Successfully Added Course!!", { type: "success" });
+        }
+      })
+      .catch((error) => {
+        toast("Failure!!", { type: "error" });
+      })
   };
 
   const [deenrollCourse, setDeenrollCourse] = useState("");
@@ -213,9 +249,17 @@ function Profile() {
       method: "DELETE",
       url: `http://127.0.0.1:8000/courses/student-course/delete-student-course`,
       params: {
-        course: deenrollCourse
-      }
-    });
+        course: deenrollCourse,
+      },
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          toast("Successfully De-enrolled!!", { type: "success" });
+        }
+      })
+      .catch((error) => {
+        toast("Failure!!", { type: "error" });
+      });
   };
   return (
     <div style={{ padding: "5%" }}>
@@ -287,37 +331,43 @@ function Profile() {
         <TabPane style={{ paddingTop: "2%" }} tabId="1">
           <Container>
             <Row>
-              <Col>
-                <Label for="fname">First Name</Label>
-                <Input
-                  id="fname"
-                  type="text"
-                  placeholder="Enter your first name"
-                  onChange={updateFname}
-                />
+              <Col style={{ padding: "1%" }}>
+                <InputGroup>
+                  <InputGroupText>First Name</InputGroupText>
+                  <Input
+                    id="fname"
+                    type="text"
+                    placeholder="Enter your first name"
+                    onChange={updateFname}
+                  />
+                </InputGroup>
               </Col>
-              <Col>
-                <Label for="lname">Last Name</Label>
-                <Input
-                  id="lname"
-                  type="text"
-                  placeholder="Enter your last name"
-                  onChange={updateLname}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Label for="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email address"
-                  onChange={updateEmail}
-                />
+              <Col style={{ padding: "1%" }}>
+                <InputGroup>
+                  <InputGroupText>Last Name</InputGroupText>
+                  <Input
+                    id="lname"
+                    type="text"
+                    placeholder="Enter your last name"
+                    onChange={updateLname}
+                  />
+                </InputGroup>
               </Col>
             </Row>
-            <Row style={{ paddingTop: "1%" }}>
+            <Row style={{ padding: "1%" }}>
+              <Col>
+                <InputGroup>
+                  <InputGroupText>Email</InputGroupText>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email address"
+                    onChange={updateEmail}
+                  />
+                </InputGroup>
+              </Col>
+            </Row>
+            <Row style={{ paddingLeft: "40%", paddingRight: "40%" }}>
               <Col>
                 <Button block color="primary" onClick={updateUser}>
                   Update Profile
@@ -329,20 +379,30 @@ function Profile() {
         <TabPane style={{ paddingTop: "2%" }} tabId="2">
           <Container>
             <Row>
-              <Col>
-                <Label for="new-password">Enter your new password</Label>
-                <Input id="new-password" type="password" onChange={newPass} />
+              <Col style={{ padding: "1%" }}>
+                <InputGroup>
+                  <InputGroupText>Password</InputGroupText>
+                  <Input
+                    id="new-password"
+                    type="password"
+                    placeholder="Enter your new password"
+                    onChange={newPass}
+                  />
+                </InputGroup>
               </Col>
-              <Col>
-                <Label for="re-enter-password">Re-enter your password</Label>
-                <Input
-                  id="re-enter-password"
-                  type="password"
-                  onChange={resetNewPass}
-                />
+              <Col style={{ padding: "1%" }}>
+                <InputGroup>
+                  <InputGroupText>Password</InputGroupText>
+                  <Input
+                    id="re-enter-password"
+                    type="password"
+                    placeholder="Re-enter your password"
+                    onChange={resetNewPass}
+                  />
+                </InputGroup>
               </Col>
             </Row>
-            <Row style={{ padding: "1%" }}>
+            <Row style={{ paddingLeft: "40%", paddingRight: "40%" }}>
               <Button
                 id="submitResetPassword"
                 color="primary"
@@ -351,19 +411,6 @@ function Profile() {
               >
                 Reset Password
               </Button>
-            </Row>
-            <Row>
-              <Popover
-                placement="bottom"
-                isOpen={popoverStatus}
-                target="submitResetPassword"
-              >
-                <PopoverHeader>Unequal passwords</PopoverHeader>
-                <PopoverBody>
-                  The two passwords are not same. Please re-enter the same
-                  password again.
-                </PopoverBody>
-              </Popover>
             </Row>
           </Container>
         </TabPane>
@@ -383,10 +430,7 @@ function Profile() {
                     return (
                       <tr>
                         <td>{course.course_name}</td>
-                        <td>{course.creater_name}</td>
-                        {/* <td>
-                          <Button outline>Enroll Now</Button>
-                        </td> */}
+                        <td>{course.creater_name.username}</td>
                       </tr>
                     );
                   })}
@@ -395,12 +439,15 @@ function Profile() {
             <Container style={{ paddingLeft: "25%", PaddingRight: "25%" }}>
               <Row>
                 <Col>
-                  <Input
-                    id="enroll-course"
-                    type="text"
-                    placeholder="Enter the course you want to enroll into"
-                    onChange={enrollCourse}
-                  />
+                  <InputGroup>
+                    <InputGroupText>Course</InputGroupText>
+                    <Input
+                      id="enroll-course"
+                      type="text"
+                      placeholder="Enter the course you want to enroll into"
+                      onChange={enrollCourse}
+                    />
+                  </InputGroup>
                 </Col>
                 <Col>
                   <Button color="primary" onClick={enrollStudent}>
@@ -426,7 +473,7 @@ function Profile() {
                     return (
                       <tr>
                         <td>{course.course.course_name}</td>
-                        <td>{course.course.creater_name}</td>
+                        <td>{course.course.creater_name.username}</td>
                       </tr>
                     );
                   })}
@@ -435,16 +482,19 @@ function Profile() {
             <Container style={{ paddingLeft: "25%", PaddingRight: "25%" }}>
               <Row>
                 <Col>
+                <InputGroup>
+                    <InputGroupText>Course</InputGroupText>
                   <Input
                     id="enroll-course"
                     type="text"
-                    placeholder="Enter the course you want to de-enroll from"
+                    placeholder="Enter the course you want to de-enroll"
                     onChange={deenrollFromCourse}
                   />
+                  </InputGroup>
                 </Col>
                 <Col>
                   <Button color="danger" onClick={deenrollStudent}>
-                    Enroll
+                    De-enroll
                   </Button>
                 </Col>
               </Row>

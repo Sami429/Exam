@@ -46,6 +46,9 @@ class StudentCourse(models.Model):
     def __str__(self):
         return (str(self.course))
 
+    class Meta:
+        unique_together = ('student', 'course')
+
 class TestAppeared(models.Model):
     student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
     test = models.ForeignKey(Test, on_delete = models.CASCADE)

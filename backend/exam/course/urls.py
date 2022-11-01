@@ -14,7 +14,7 @@ urlpatterns = [
     path('test/create-test/', views.TestDetail.as_view()),
     #  ! Question URLS
     path('question/question-list/', views.QuestionDetail.as_view()),
-    path('question/update-question/', views.QuestionDetail.as_view()),
+    path('question/update-question', views.QuestionDetail.as_view()),
     path('question/delete-question', views.QuestionDetail.as_view()),
     path('question/create-question/', views.QuestionDetail.as_view()),
     # ! Student Course URLS 

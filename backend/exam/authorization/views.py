@@ -1,5 +1,6 @@
 from asyncore import dispatcher
 from functools import partial
+from json.encoder import ESCAPE_DCT
 from tkinter.tix import Tree
 from django.shortcuts import render
 from django.http import Http404
@@ -12,7 +13,6 @@ from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-
 from .serializers import UserSerializer
 class StudentRegistration(APIView):
     def post(self, request):
@@ -27,35 +27,45 @@ class StudentRegistration(APIView):
         new_user.last_name = lname
         grouped = Group.objects.get(name=group)
         new_user.groups.add(grouped)
-        new_user.save()
-        return Response({"status": status.HTTP_201_CREATED})
+        try:
+            new_user.save()
+            return Response({"status": status.HTTP_200_OK})
+        except:
+            return Response({'status': status.HTTP_400_BAD_REQUEST})
 
     def get(self, request):
-        user = User.objects.filter(groups__name="Student").values()
-        return Response(list(user))
+        try:
+            user = User.objects.filter(groups__name="Student").values()
+            return Response(list(user))
+        except:
+            return Response({'status': status.HTTP_400_BAD_REQUEST})
 
 
 
 class UserLogin(APIView):
     def post(self, request):
-        print(request.user)
+        # print(request.user)
         usr = request.data['username']
         passw = request.data['password']
         auth = authenticate(request, username = usr, password = passw)
-        if auth is not None:
+        print(auth)
+        if auth is not 'AnonymousUser':
             login(request, auth)
-            print(request.user)
-            return HttpResponse({"status": status.HTTP_200_OK})
+            # print(request.user)
+            return Response({"status": status.HTTP_200_OK})
         else:
-            return HttpResponse({"status": status.HTTP_401_UNAUTHORIZED})
+            return Response({"status": status.HTTP_401_UNAUTHORIZED})
 
 # method_decorator(login_required, name='post')
 class UserLogout(APIView):
     def post(self, request):
         print(request.user)
-        logout(request)
-        print(request.user)
-        return HttpResponse({"status": status.HTTP_200_OK})
+        try:
+            logout(request)
+            print(request.user)
+            return Response({"status": status.HTTP_200_OK})
+        except:
+            return Response({{"status": status.HTTP_400_BAD_REQUEST}})
 
 class DeactivateUser(APIView):
     def post(self, request):
@@ -81,20 +91,30 @@ class GetUserDetails(APIView):
 class UpdateUserView(APIView):
     def put(self, request):
         user = User.objects.get(username = request.user)
-        # serializer = UserSerializer(user, data = request.data, partial = True)
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response(serializer.data)
-        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         fname = request.data['fname']
         lname = request.data['lname']
         email = request.data['email']
         if fname:
+            print(fname)
             user.first_name = fname
         if lname:
+            print(lname)
             user.last_name = lname
         if email:
+            print(email)
             user.email = email  
-        user.save()
-        return Response({"status": status.HTTP_200_OK})      
+        try:
+            user.save()
+            return Response({"status": status.HTTP_200_OK})  
+        except:
+            return Response({'status': status.HTTP_400_BAD_REQUEST})    
         
+class GetUserList(APIView):
+    def get(self, request):
+        try:
+            user_list = User.objects.filter(groups__name = "Student")
+            serializer = UserSerializer(user_list, many = True)
+            return Response(serializer.data)
+        except:
+            return Response({'status': status.HTTP_400_BAD_REQUEST})
+            

@@ -25,6 +25,9 @@ class CourseSerializer(serializers.Serializer):
         instance.course_name = validated_data.get(
             "course_name", instance.course_name
         )
+        instance.creater_name = validated_data.get(
+            "creater_name", instance.creater_name
+        )
         instance.save()
         return instance
 
@@ -47,7 +50,7 @@ class TestSerializer(serializers.Serializer):
         return test_obj
 
     def update(self, instance, validated_data):
-        instance.test_name = validated_data.get("test_name", instance.test_name)
+        # instance.test_name = validated_data.get("test_name", instance.test_name)
         instance.test_duration = validated_data.get(
             "test_duration", instance.test_duration
         )
