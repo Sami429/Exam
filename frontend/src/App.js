@@ -6,6 +6,7 @@ import Profile from "./pages/Profile";
 import StaffLogin from "./pages/StaffLogin";
 import StaffProfile from "./pages/StaffProfile";
 import { ToastContainer } from "react-toastify";
+import Test from "./pages/Test";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             path="/staff-profile"
             element={<StaffProfile></StaffProfile>}
           />
+          <Route path="/test" element={<Test></Test>}/>
         </Routes>
       </Router>
     </>

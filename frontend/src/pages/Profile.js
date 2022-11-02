@@ -4,24 +4,19 @@ import {
   Col,
   Container,
   Input,
-  Label,
   Nav,
   NavItem,
   NavLink,
-  Popover,
   Row,
   TabContent,
   Table,
   TabPane,
-  PopoverHeader,
-  PopoverBody,
-  Form,
   InputGroup,
   InputGroupText,
 } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 axios.defaults.withCredentials = true;
 
@@ -88,7 +83,7 @@ function Profile() {
   // const tokenApp = window.localStorage.getItem("token");
   const logoutFunction = () => {
     axios
-      .post("http://127.0.0.1:8000/users/logout/", {
+      .post("/users/logout/", {
         withCredentials: true,
       })
       .then((response) => {
@@ -122,7 +117,7 @@ function Profile() {
   const updateUser = () => {
     axios
       .put(
-        "http://127.0.0.1:8000/users/update-user-details/",
+        "/users/update-user-details/",
         {
           fname: updateUserFname,
           lname: updateUserLname,
@@ -143,7 +138,6 @@ function Profile() {
 
   const [newPassword, setNewPassword] = useState("");
   const [resetPassword, setRestPassword] = useState("");
-  const [popoverStatus, setPopoverStatus] = useState(false);
   const newPass = (e) => {
     console.log(e.target.value);
     setNewPassword(e.target.value);
@@ -156,7 +150,7 @@ function Profile() {
     if (newPassword === resetPassword) {
       axios
         .put(
-          "http://127.0.0.1:8000/users/reset-password/",
+          "/users/reset-password/",
           {
             new_password: newPassword,
           },
@@ -179,7 +173,7 @@ function Profile() {
   let [allCourses, setAllCourses] = useState("");
   const getCourses = () => {
     axios
-      .get("http://127.0.0.1:8000/courses/course/course-list/")
+      .get("/courses/course/course-list/")
       .then((response) => {
         setAllCourses(response.data);
         console.log(allCourses);
@@ -188,7 +182,7 @@ function Profile() {
   let [myCourses, setMyCourses] = useState("");
   const getMyCourses = () => {
     axios
-      .get("http://127.0.0.1:8000/courses/student-course/get-student-course/")
+      .get("/courses/student-course/get-student-course/")
       .then((response) => {
         setMyCourses(response.data);
         console.log(myCourses);
@@ -197,7 +191,7 @@ function Profile() {
   let [allTests, setAllTests] = useState("");
   const getTests = () => {
     axios
-      .get("http://127.0.0.1:8000/courses/test/test-list/")
+      .get("/courses/test/test-list/")
       .then((response) => {
         setAllTests(response.data);
         console.log(allTests);
@@ -207,7 +201,7 @@ function Profile() {
   let [myTests, setMyTests] = useState("");
   const getMyTests = () => {
     axios
-      .get("http://127.0.0.1:8000/courses/student-test/get-student-test/")
+      .get("/courses/student-test/get-student-test/")
       .then((response) => {
         setMyTests(response.data);
         console.log(myTests);
@@ -221,7 +215,7 @@ function Profile() {
   const enrollStudent = () => {
     axios
       .post(
-        "http://127.0.0.1:8000/courses/student-course/add-student-course/",
+        "/courses/student-course/add-student-course/",
         {
           course_id: selectedCourse,
         },
@@ -247,7 +241,7 @@ function Profile() {
   const deenrollStudent = () => {
     axios({
       method: "DELETE",
-      url: `http://127.0.0.1:8000/courses/student-course/delete-student-course`,
+      url: `/courses/student-course/delete-student-course`,
       params: {
         course: deenrollCourse,
       },

@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Signup() {
   const [rSelected, setRSelected] = useState(null);
@@ -45,21 +46,28 @@ axios.defaults.xsrfCookieName = "csrftoken";
   const navigate = useNavigate();
   const signupFunction = () => {
     axios
-      .post("http://127.0.0.1:8000/users/signup/", {
-        username: username,
-        fname: fname,
-        lname: lname,
-        email: email,
-        password: password,
-        group: group,
-      },
-      {withCredentials: true})
-      .then(function (response) {
-        console.log(response);
-        navigate("/login");
+      .post(
+        "/users/signup/",
+        {
+          username: username,
+          fname: fname,
+          lname: lname,
+          email: email,
+          password: password,
+          group: group,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        // toast.success("Successful Login");
+        if (response.status === 200) {
+          toast("Successfully Created User!!", { type: "success" });
+          navigate("/login");
+        }
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        toast("Failure!!", { type: "error" });
+        navigate("/");
       });
     }
   return (

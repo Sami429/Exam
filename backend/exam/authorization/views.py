@@ -79,9 +79,13 @@ class DeactivateUser(APIView):
 
 class ChangePassword(APIView):
     def put(self, request):
-        user = User.objects.filter(username=request.user)
-        user.password = make_password(request.data['new_password'])
-        return Response({"status": status.HTTP_200_OK})
+        try:
+            user = User.objects.get(username=request.user)
+            user.set_password(request.data['new_password'])
+            user.save()
+            return Response({"status": status.HTTP_200_OK})
+        except:
+            return Response({"status": status.HTTP_400_BAD_REQUEST})
 
 class GetUserDetails(APIView):
     def get(self, request):

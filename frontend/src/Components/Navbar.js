@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from "reactstrap";
 
 function NavigationBar(args) {

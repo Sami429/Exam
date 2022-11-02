@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify"
+import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css";
 function Login() {
   const [username, setUsername] = useState("");
@@ -26,7 +26,7 @@ function Login() {
   const loginFunction = () => {
     axios
       .post(
-        "http://127.0.0.1:8000/users/login/",
+        "/users/login/",
         {
           username: username,
           password: password,
@@ -36,7 +36,6 @@ function Login() {
         }
       )
       .then(response => {
-        // toast.success("Successful Login");
         if (response.status === 200) {
           toast('Successfully Logged In!!', {type: "success"})
           navigate("/profile");

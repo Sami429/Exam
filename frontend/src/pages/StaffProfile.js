@@ -4,25 +4,19 @@ import {
   Col,
   Container,
   Input,
-  Label,
   Nav,
   NavItem,
   NavLink,
-  Popover,
   Row,
   TabContent,
   Table,
   TabPane,
-  PopoverHeader,
-  PopoverBody,
-  Form,
-  Badge,
   InputGroup,
   InputGroupText,
 } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 axios.defaults.withCredentials = true;
@@ -90,7 +84,7 @@ function StaffProfile() {
   // const tokenApp = window.localStorage.getItem("token");
   const logoutFunction = () => {
     axios
-      .post("http://127.0.0.1:8000/users/logout/", {
+      .post("/users/logout/", {
         withCredentials: true,
       })
       .then((response) => {
@@ -124,7 +118,7 @@ function StaffProfile() {
   const updateUser = () => {
     axios
       .put(
-        "http://127.0.0.1:8000/users/update-user-details/",
+        "/users/update-user-details/",
         {
           fname: updateUserFname,
           lname: updateUserLname,
@@ -133,7 +127,6 @@ function StaffProfile() {
         { withCredentials: true }
       )
       .then((response) => {
-        // toast.success("Successful Login");
         if (response.status === 200) {
           toast("User Updated Successfully!!", { type: "success" });
         }
@@ -145,7 +138,6 @@ function StaffProfile() {
 
   const [newPassword, setNewPassword] = useState("");
   const [resetPassword, setRestPassword] = useState("");
-  const [popoverStatus, setPopoverStatus] = useState(false);
   const newPass = (e) => {
     console.log(e.target.value);
     setNewPassword(e.target.value);
@@ -158,7 +150,7 @@ function StaffProfile() {
     if (newPassword === resetPassword) {
       axios
         .put(
-          "http://127.0.0.1:8000/users/reset-password/",
+          "/users/reset-password/",
           {
             new_password: newPassword,
           },
@@ -181,7 +173,7 @@ function StaffProfile() {
   let [allCourses, setAllCourses] = useState("");
   const getCourses = () => {
     axios
-      .get("http://127.0.0.1:8000/courses/course/course-list/")
+      .get("/courses/course/course-list/")
       .then((response) => {
         setAllCourses(response.data);
         console.log(allCourses);
@@ -197,7 +189,7 @@ function StaffProfile() {
   const [questions, setQuestions] = useState("");
   const getQuestions = () => {
     axios
-      .get("http://127.0.0.1:8000/courses/question/question-list/")
+      .get("/courses/question/question-list/")
       .then((response) => {
         setQuestions(response.data);
         console.log(questions);
@@ -213,7 +205,7 @@ function StaffProfile() {
   let [allTests, setAllTests] = useState("");
   const getTests = () => {
     axios
-      .get("http://127.0.0.1:8000/courses/test/test-list/")
+      .get("/courses/test/test-list/")
       .then((response) => {
         setAllTests(response.data);
         console.log(allTests);
@@ -221,49 +213,6 @@ function StaffProfile() {
       .then((response) => {
         // toast.success("Successful Login");
         toast("List Fetched Successfully!!", { type: "success" });
-      })
-      .catch((error) => {
-        toast("Failure!!", { type: "error" });
-      });
-  };
-
-  const [selectedCourse, setSelectedCourse] = useState("");
-  const enrollCourse = (e) => {
-    setSelectedCourse(e.target.value);
-  };
-  const enrollStudent = () => {
-    axios
-      .post(
-        "http://127.0.0.1:8000/courses/student-course/add-student-course/",
-        {
-          course_id: selectedCourse,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
-        // toast.success("Successful Login");
-        toast("Added Course Successfully!!", { type: "success" });
-      })
-      .catch((error) => {
-        toast("Failure!!", { type: "error" });
-      });
-  };
-
-  const [deenrollCourse, setDeenrollCourse] = useState("");
-  const deenrollFromCourse = (e) => {
-    setDeenrollCourse(e.target.value);
-  };
-  const deenrollStudent = () => {
-    axios({
-      method: "DELETE",
-      url: "http://127.0.0.1:8000/courses/student-course/delete-student-course/",
-      params: { course: deenrollCourse },
-    })
-      .then((response) => {
-        // toast.success("Successful Login");
-        toast("De-enrolled Successfully!!", { type: "success" });
       })
       .catch((error) => {
         toast("Failure!!", { type: "error" });
@@ -280,7 +229,7 @@ function StaffProfile() {
   const createCourse = () => {
     axios
       .post(
-        "http://127.0.0.1:8000/courses/course/create-course/",
+        "/courses/course/create-course/",
         {
           course_name: newCourse,
           //   creater_name: newCourseCreater
@@ -309,7 +258,7 @@ function StaffProfile() {
   const updateCourse = () => {
     axios
       .put(
-        "http://127.0.0.1:8000/courses/course/update-course",
+        "/courses/course/update-course",
         {
           course_name: updatedCourseName,
         },
@@ -336,7 +285,7 @@ function StaffProfile() {
   const deleteCourse = () => {
     axios({
       method: "DELETE",
-      url: "http://127.0.0.1:8000/courses/course/delete-course",
+      url: "/courses/course/delete-course",
       params: { course: deleteCourseName },
     })
       .then((response) => {
@@ -380,7 +329,7 @@ function StaffProfile() {
   const createQuestions = () => {
     axios
       .post(
-        "http://127.0.0.1:8000/courses/question/create-question/",
+        "/courses/question/create-question/",
         {
           question: questionName,
           option_a: optionA,
@@ -405,7 +354,7 @@ function StaffProfile() {
   const updateQuestions = () => {
     axios
       .put(
-        "http://127.0.0.1:8000/courses/question/update-question",
+        "/courses/question/update-question",
         {
           question: questionName,
           option_a: optionA,
@@ -435,7 +384,7 @@ function StaffProfile() {
   const deleteQuestion = () => {
     axios({
       method: "DELETE",
-      url: "http://127.0.0.1:8000/courses/question/delete-question",
+      url: "/courses/question/delete-question",
       params: { question: questionName },
     })
       .then((response) => {
@@ -467,7 +416,7 @@ function StaffProfile() {
   const createTest = () => {
     axios
       .post(
-        "http://127.0.0.1:8000/courses/test/create-test/",
+        "/courses/test/create-test/",
         {
           test_name: newTestName,
           test_duration: testDuration,
@@ -489,7 +438,7 @@ function StaffProfile() {
   const updateTest = () => {
     axios
       .put(
-        "http://127.0.0.1:8000/courses/test/update-test/",
+        "/courses/test/update-test/",
         {
           test_name: newTestName,
           test_duration: testDuration,
@@ -514,7 +463,7 @@ function StaffProfile() {
   const deleteTest = () => {
     axios({
       method: "DELETE",
-      url: "http://127.0.0.1:8000/courses/test/delete-test",
+      url: "/courses/test/delete-test",
       params: { test: deleteTestName },
     })
       .then((response) => {
@@ -533,7 +482,7 @@ function StaffProfile() {
   const deactivateUser = () => {
     axios
       .post(
-        "http://127.0.0.1:8000/users/deactivate/",
+        "/users/deactivate/",
         {
           username: deactivateUsername,
         },
@@ -774,17 +723,6 @@ function StaffProfile() {
               </Button>
             </Row>
             <Row>
-              <Popover
-                placement="bottom"
-                isOpen={popoverStatus}
-                target="submitResetPassword"
-              >
-                <PopoverHeader>Unequal passwords</PopoverHeader>
-                <PopoverBody>
-                  The two passwords are not same. Please re-enter the same
-                  password again.
-                </PopoverBody>
-              </Popover>
             </Row>
           </Container>
         </TabPane>
@@ -1199,9 +1137,6 @@ function StaffProfile() {
                         <td>{test.test_name}</td>
                         <td>{test.test_duration}</td>
                         <td>{test.fk_course.course_name}</td>
-                        <td>
-                          <Button outline>Start Test</Button>
-                        </td>
                       </tr>
                     );
                   })}

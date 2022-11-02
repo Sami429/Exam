@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function StaffLogin() {
@@ -27,7 +27,7 @@ function StaffLogin() {
   const loginFunction = () => {
     axios
       .post(
-        "http://127.0.0.1:8000/users/login/",
+        "/users/login/",
         {
           username: username,
           password: password,
